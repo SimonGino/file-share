@@ -16,3 +16,5 @@ htmlcov
 *.swp
 .idea/
 *.whl
+/app/uploaded_files/
+/app/test.db

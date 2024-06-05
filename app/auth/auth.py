@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from crud import get_user_by_username
-from utils import verify_password
-from database import SessionLocal
+from app.crud.user import get_user_by_username
+from app.utils import verify_password
+from app.database import get_db
 
 SECRET_KEY = "d0952ac8643f21fb0ca78cd4945a2f47e4a4a9b3a0f4338991a369f2ef3938e6"
 ALGORITHM = "HS256"
@@ -13,12 +13,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
