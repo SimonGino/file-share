@@ -8,8 +8,12 @@
 
 ```sh
 pip install pipreqs
+```
+
+```shell
 pipreqs . --force
 ```
+
 ## Docker镜像打包和运行
 
 ```sh
@@ -17,7 +21,7 @@ docker build -t file-server .
 ```
 
 ```sh
-docker run -d -p 8000:8000 -v /path/to/.env:/app/.env --name file-server-container file-server
+docker run -d -p 8000:8000 -v /path/to/.env:/code/app/.env --name file-server-container file-server
 ```
 
 ## .env环境

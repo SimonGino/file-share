@@ -3,6 +3,11 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import get_settings
+import logging
+
+# 配置日志记录器
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load settings from environment file
 settings=get_settings()
@@ -21,6 +26,7 @@ connect_args = {"check_same_thread": False}
 # If MySQL configuration is provided, attempt to use MySQL
 if mysql_host and mysql_port and mysql_user and mysql_password and mysql_db:
     mysql_url = f"mysql+pymysql://{mysql_user}:{mysql_password}@{mysql_host}:{mysql_port}/{mysql_db}"
+    logger.info("mysql url: {}".format(mysql_url))
     try:
         # Test MySQL connection
         test_engine = create_engine(mysql_url)
