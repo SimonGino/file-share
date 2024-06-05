@@ -1,6 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
 from app.api.endpoints import auth, files, folders
+from app.core import config
 from app.models import Base
 from app.database import engine
 
