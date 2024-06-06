@@ -14,7 +14,7 @@ import os
 
 router = APIRouter()
 
-@router.post("/upload/{folder_path:path}")
+@router.post("/upload")
 async def upload_file(
     folder_path: str, file: UploadFile = File(...), db: Session = Depends(get_db), user: UserSchema = Depends(get_current_user)
 ):
