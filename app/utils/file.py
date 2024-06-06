@@ -13,8 +13,8 @@ def verify_password(plain_password, hashed_password):
 
 UPLOAD_DIRECTORY = "./uploaded_files"
 
-def save_file(file: UploadFile, folder_path: str):
-    full_folder_path = os.path.join(UPLOAD_DIRECTORY, folder_path)
+def save_file(file: UploadFile):
+    full_folder_path = os.path.join(UPLOAD_DIRECTORY)
     if not os.path.exists(full_folder_path):
         os.makedirs(full_folder_path)
     file_path = os.path.join(full_folder_path, file.filename)
@@ -22,5 +22,5 @@ def save_file(file: UploadFile, folder_path: str):
         f.write(file.file.read())
     return file_path
 
-def get_file_path(folder_path: str, file_name: str):
-    return os.path.join(UPLOAD_DIRECTORY, folder_path, file_name)
+def get_file_path( file_name: str):
+    return os.path.join(UPLOAD_DIRECTORY, file_name)

@@ -1,3 +1,3 @@
 # app/models/__init__.py
-from .user import User
+from .models import User,FuFile,Folder
 from app.database import Base
