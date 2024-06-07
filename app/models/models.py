@@ -1,5 +1,7 @@
 import uuid
-from sqlalchemy import Column, Integer, String
+import datetime
+
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -26,4 +28,6 @@ class FuFile(Base):
     id = Column(String(64), primary_key=True, default=str(uuid.uuid4), index=True)
     name = Column(String(255), index=True)
     path = Column(String(255))
-    folder_id = Column(String(64))  # 不再定义外键关系
+    folder_id = Column(String(64))
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    file_size = Column(Integer)  # 使用整数类型存储文件大小，以字节为单位

@@ -1,4 +1,5 @@
 # app/schemas/schemas.py
+from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 from uuid import UUID
@@ -30,6 +31,8 @@ class FileBase(BaseModel):
     name: str
     path: str
     folder_id: UUID
+    file_size: Optional[int] = None  # 文件大小属性，默认为 None，以便在创建时更新
+    created_at: Optional[datetime] = None  # 创建时间属性，默认为 None，以便在创建时更新
 
 class FileCreate(FileBase):
     pass

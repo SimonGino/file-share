@@ -1,5 +1,6 @@
 # api/endpoints/files.py
 import uuid
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Query
 from fastapi.responses import FileResponse
@@ -7,12 +8,19 @@ from sqlalchemy.orm import Session
 from app.auth import get_current_user
 from app.crud.file import create_file, get_file, create_folder, get_folder_by_name, get_or_create_folder_by_path
 from app.database import get_db
+from app.models import FuFile
 from app.schemas import User as UserSchema, FileCreate, FolderCreate
 from app.utils.file import save_file, get_file_path
 from app.redis_client import r
 import os
 
 router = APIRouter()
+
+def get_file_size(file: UploadFile) -> int:
+    file.file.seek(0, os.SEEK_END)  # 移动到文件末尾
+    file_size = file.file.tell()    # 获取文件大小
+    file.file.seek(0)                # 将文件指针移回到文件开头
+    return file_size
 
 @router.post("/upload")
 async def upload_file(
@@ -27,7 +35,7 @@ async def upload_file(
         return {"error": "Failed to create folder"}
 
     # 确保成功创建文件夹后再创建文件数据
-    file_data = FileCreate(name=file.filename, path=folder_path, folder_id=existing_folder.id)
+    file_data = FileCreate(name=file.filename, path=folder_path, folder_id=existing_folder.id,file_size = get_file_size(file))
     result = create_file(db, file_data)
     file_path = save_file(file)
 
@@ -71,14 +79,15 @@ async def share_file(
     r.setex(share_token, 3600, user.username)
     return {"share_url": f"/files/api/download/{folder_path}/{file_name}?token={share_token}"}
 
-#
+
 # @router.post("/files/")
 # def create_new_file(file: FileCreate, db: Session = Depends(get_db)):
 #     return create_file(db=db, file=file)
 #
-# @router.get("/files/{file_id}")
-# def read_file(file_id: uuid.UUID, db: Session = Depends(get_db)):
-#     db_file = get_file(db, file_id=file_id)
-#     if db_file is None:
-#         raise HTTPException(status_code=404, detail="File not found")
-#     return db_file
+@router.get("/files")
+def read_file(file_id: Optional[str] = Query(None),  db: Session = Depends(get_db)):
+    if file_id:
+        return db.query(FolderCreate).filter(FolderCreate.id == file_id).first()
+    else:
+        files: List[FuFile] = db.query(FuFile).all()
+        return files
