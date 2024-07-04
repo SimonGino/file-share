@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
+
 class Settings(BaseSettings):
     redis_host: str = 'localhost'
     redis_port: int = 6379
@@ -16,8 +17,10 @@ class Settings(BaseSettings):
         env_file = "app/.env"
         env_file_encoding = 'utf-8'
 
-# settings = Settings()
 
 @lru_cache
 def get_settings():
     return Settings()
+
+
+settings = get_settings()
