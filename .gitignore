@@ -16,5 +16,5 @@ htmlcov
 *.swp
 .idea/
 *.whl
-/app/uploaded_files/
-/app/test.db
+/source/uploaded_files/
+/source/test.db

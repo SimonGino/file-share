@@ -21,7 +21,7 @@ docker build -t file-server .
 ```
 
 ```sh
-docker run -d -p 8000:8000 -v /path/to/.env:/code/app/.env --name file-server-container file-server
+docker run -d -p 8000:8000 -v /path/to/.env:/code/source/.env --name file-server-container file-server
 ```
 
 ## .env环境
