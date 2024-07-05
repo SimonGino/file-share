@@ -12,10 +12,17 @@ class Settings(BaseSettings):
     mysql_password: str = "root"
     mysql_db: str = ""
 
+    MINIO_ROOT_USER: str = "admin"
+    MINIO_ROOT_PASSWORD: str = "1122qazwsx"
+    MINIO_HOST: str = "localhost"
+    MINIO_PORT: int = 9000
+    MINIO_SECURE: bool = False
+    MINIO_BUCKET_NAME: str = "minio-bucket"
+    MINIO_URI: str = ""
+
+
     class Config:
-        env_prefix = ''
-        env_file = "app/.env"
-        env_file_encoding = 'utf-8'
+        env_file = ".env"
 
 
 @lru_cache

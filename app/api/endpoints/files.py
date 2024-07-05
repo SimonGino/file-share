@@ -7,9 +7,9 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from app.auth import get_current_user
 from app.crud.file import create_file, get_or_create_folder_by_path
-from app.database import get_db
+from app.storages.database import get_db
 from app.models import FuFile
-from app.redis_client import r
+from app.storages.redis_client import r
 from app.schemas import User as UserSchema, FileCreate, FolderCreate
 from app.utils.file import save_file, get_file_path
 

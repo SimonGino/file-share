@@ -51,4 +51,4 @@ class File(FileBase):
 
     class Config:
         from_attributes = True  # 使用 Pydantic v2 的新配置键
-        orm_mode = True
+        # orm_mode = True

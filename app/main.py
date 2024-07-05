@@ -1,9 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
-from app.api.endpoints import auth, files, folders
-from app.core import config
-from app.models import Base
-from app.database import engine
+from app.api.endpoints import auth, files, folders, minio
+from app.storages.database import engine,Base
 from fastapi.middleware.cors import CORSMiddleware
 
 # 创建所有数据库表
@@ -25,6 +23,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(files.router, prefix="/files", tags=["files"])
 app.include_router(folders.router, prefix="/folders", tags=["folders"])
+app.include_router(minio.router, prefix="/minio", tags=["minio"])
 
 if __name__ == "__main__":
     import uvicorn

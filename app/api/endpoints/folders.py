@@ -1,12 +1,11 @@
 # api/endpoints/folders.py
-import uuid
 from typing import Dict, Any, List, Optional
 
 from fastapi import APIRouter, Depends, Query
 from app.auth import get_current_user
-from app.database import get_db
+from app.storages.database import get_db
 from app.models import Folder, FuFile
-from app.schemas import User as UserSchema, FolderCreate
+from app.schemas import User as UserSchema
 from app.utils import create_folder
 from sqlalchemy.orm import Session
 
