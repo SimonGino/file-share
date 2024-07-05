@@ -12,3 +12,35 @@ services:
       - ./config/.env
     volumes:
       - ./source:/app/source
+    depends_on:
+      - mariadb
+      - minio
+      - redis
+
+  mariadb:
+    container_name: mariadb1
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./config/.env
+
+  minio:
+    container_name: minio1
+    image: minio/minio
+    restart: always
+    command: server --address 0.0.0.0:9000 /data
+    ports:
+      - "9000:9000"
+    env_file:
+      - ./config/.env
+
+  redis:
+    container_name: redis1
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./config/.env

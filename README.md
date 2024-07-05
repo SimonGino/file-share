@@ -17,11 +17,12 @@ pipreqs . --force
 ## Docker镜像打包和运行
 
 ```sh
-docker build -t file-server .
+docker-compose up --build
+
 ```
 
 ```sh
-docker run -d -p 8000:8000 -v /path/to/.env:/code/source/.env --name file-server-container file-server
+docker-compose up --d
 ```
 
 ## .env环境
