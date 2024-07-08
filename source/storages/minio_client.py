@@ -20,12 +20,6 @@ class MinioClient:
             secure=settings.MINIO_SECURE
         )
 
-    # def upload_file(self, bucket_name, file_path, object_name):
-    #     try:
-    #         self.client.fput_object(bucket_name, object_name, file_path)
-    #         logger.info(f"File {file_path} is successfully uploaded as {object_name} to bucket {bucket_name}.")
-    #     except S3Error as e:
-    #         logger.error(f"Error occurred: {e}")
     def upload_file(self, bucket_name, file_path, object_name):
         try:
             # 使用 filetype 获取文件的 MIME 类型
@@ -65,6 +59,18 @@ class MinioClient:
         try:
             response = self.client.get_object(bucket_name, object_name)
             return response
+        except S3Error as e:
+            logger.error(f"Error occurred: {e}")
+            return None
+
+    def get_file_preview_url(self, bucket_name, filename, expiration=3600):
+        try:
+            presigned_url = self.client.presigned_get_object(
+                bucket_name,
+                filename,
+                expires=expiration
+            )
+            return presigned_url
         except S3Error as e:
             logger.error(f"Error occurred: {e}")
             return None
