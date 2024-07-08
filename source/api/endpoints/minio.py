@@ -1,8 +1,10 @@
 import logging
 import os
+from datetime import timedelta
 from io import BytesIO
 from urllib.parse import unquote_plus
 
+import filetype
 import minio
 from fastapi import UploadFile, File, HTTPException, APIRouter
 from fastapi.responses import JSONResponse
@@ -34,10 +36,22 @@ async def upload_file(file: UploadFile = File(...)):
         # Remove the temporary file
         os.remove(file_location)
 
-        return JSONResponse(status_code=200, content={"message": "File uploaded successfully"})
+        presigned_url = await get_file_preview_url(get_settings().MINIO_BUCKET_NAME, file.filename)
+
+        return JSONResponse(status_code=200, content={"message": "File uploaded successfully", "url": presigned_url})
     except Exception as e:
         logger.error(f"File upload failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+async def get_file_preview_url(bucket_name,filename):
+    # Generate a presigned URL for the uploaded file with custom headers
+    presigned_url = minio_client.client.presigned_get_object(
+        get_settings().MINIO_BUCKET_NAME,
+        filename,
+        expires=timedelta(days=7),  # URL expiry time
+    )
+    return presigned_url
 
 
 # Ensure the bucket exists on startup
@@ -130,12 +144,14 @@ async def get_file_info(filename: str):
 
         # 将 last_modified 转换为字符串
         last_modified_str = file_info.last_modified.strftime("%Y-%m-%d %H:%M:%S")
-
+        presigned_url = await get_file_preview_url(bucket_name, filename)
         return JSONResponse(status_code=200, content={
             "filename": file_info.object_name,
             "size": file_info.size,
             "last_modified": last_modified_str,  # 现在是字符串
             "etag": file_info.etag,
+            "content_type": file_info.content_type,
+            "presigned_url": presigned_url,
         })
     except Exception as e:
         logger.error(f"Get file info failed: {e}")

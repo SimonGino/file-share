@@ -1,4 +1,6 @@
 import logging
+
+import filetype
 from minio import Minio
 from minio.error import S3Error
 from source.core.config import get_settings
@@ -18,9 +20,24 @@ class MinioClient:
             secure=settings.MINIO_SECURE
         )
 
+    # def upload_file(self, bucket_name, file_path, object_name):
+    #     try:
+    #         self.client.fput_object(bucket_name, object_name, file_path)
+    #         logger.info(f"File {file_path} is successfully uploaded as {object_name} to bucket {bucket_name}.")
+    #     except S3Error as e:
+    #         logger.error(f"Error occurred: {e}")
     def upload_file(self, bucket_name, file_path, object_name):
         try:
-            self.client.fput_object(bucket_name, object_name, file_path)
+            # 使用 filetype 获取文件的 MIME 类型
+            kind = filetype.guess(file_path)
+            content_type = kind.mime if kind else 'application/octet-stream'
+
+            # 上传文件时指定 Content-Type
+            self.client.fput_object(
+                bucket_name, object_name, file_path,
+                content_type=content_type
+            )
+
             logger.info(f"File {file_path} is successfully uploaded as {object_name} to bucket {bucket_name}.")
         except S3Error as e:
             logger.error(f"Error occurred: {e}")
