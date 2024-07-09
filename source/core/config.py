@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     MINIO_BUCKET_NAME: str = "minio-bucket"
     MINIO_URI: str = ""
 
+    OPENAI_API_KEY: str = ""
+    OPENAI_API_BASE_URL: str = ""
+
 
     class Config:
         env_file = ".env"
